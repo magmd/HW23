@@ -24,6 +24,8 @@ let sessionConfig: URLSessionConfiguration = {
     return config
 }()
 
+let status_codes = [200, 301, 302, 303, 400, 401, 403, 404, 500, 501, 502, 505]
+
 let session = URLSession(configuration: sessionConfig)
 
 public func getData(urlRequest: String, completion: @escaping(HTTPURLResponse, String, String) -> Void) {
@@ -40,7 +42,7 @@ public func getData(urlRequest: String, completion: @escaping(HTTPURLResponse, S
         if error != nil {
             completion(HTTPURLResponse.init(), "", "Connection error")
             return
-        } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+        } else if let response = response as? HTTPURLResponse, status_codes.contains(response.statusCode) {
             guard let data = data else { return }
             let dataAsString = String(data: data, encoding: .utf8) ?? ""
             completion(response, dataAsString, "")
